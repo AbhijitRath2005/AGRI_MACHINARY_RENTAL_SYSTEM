@@ -37,6 +37,17 @@ const userSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true
+    },
+    // Owner-specific vehicle fields
+    vehicleNumber: {
+        type: String,
+        trim: true
+    },
+    vehiclePurchaseDate: {
+        type: Date
+    },
+    vehicleProofUrl: {
+        type: String
     }
 }, {
     timestamps: true

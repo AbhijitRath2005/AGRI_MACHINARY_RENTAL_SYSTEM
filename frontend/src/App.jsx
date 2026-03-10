@@ -28,6 +28,10 @@ import MaintenanceApproval from './pages/MaintenanceApproval';
 import AdminLogin from './pages/AdminLogin';
 import FarmerPortal from './pages/FarmerPortal';
 import MachineryOwnerPortal from './pages/MachineryOwnerPortal';
+import FarmerLogin from './pages/FarmerLogin';
+import FarmerRegister from './pages/FarmerRegister';
+import OwnerLogin from './pages/OwnerLogin';
+import OwnerRegister from './pages/OwnerRegister';
 
 function App() {
     const { loading } = useAuth();
@@ -53,10 +57,16 @@ function App() {
                         <Route path="/machines" element={<MachineListing />} />
                         <Route path="/machines/:id" element={<MachineDetail />} />
 
-                        {/* Portal Routes */}
+                        {/* Portal Landing Pages */}
                         <Route path="/admin-login" element={<AdminLogin />} />
                         <Route path="/farmer-portal" element={<FarmerPortal />} />
                         <Route path="/owner-portal" element={<MachineryOwnerPortal />} />
+
+                        {/* Separate Portal Login/Register */}
+                        <Route path="/farmer-login" element={<FarmerLogin />} />
+                        <Route path="/farmer-register" element={<FarmerRegister />} />
+                        <Route path="/owner-login" element={<OwnerLogin />} />
+                        <Route path="/owner-register" element={<OwnerRegister />} />
 
                         {/* Farmer Routes */}
                         <Route

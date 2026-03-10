@@ -18,12 +18,29 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         // Check for stored auth data on mount
-        const storedToken = localStorage.getItem('token');
-        const storedUser = localStorage.getItem('user');
+        try {
+            const storedToken = localStorage.getItem('token');
+            const storedUser = localStorage.getItem('user');
 
-        if (storedToken && storedUser) {
-            setToken(storedToken);
-            setUser(JSON.parse(storedUser));
+            if (storedToken && storedToken !== 'undefined' && storedUser && storedUser !== 'undefined') {
+                const parsedUser = JSON.parse(storedUser);
+                if (parsedUser && typeof parsedUser === 'object') {
+                    setToken(storedToken);
+                    setUser(parsedUser);
+                } else {
+                    // Invalid data, clear it
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                }
+            } else {
+                // Clear any invalid stored values
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+            }
+        } catch (e) {
+            console.error('Failed to parse stored auth data:', e);
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
         }
         setLoading(false);
     }, []);
@@ -31,7 +48,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (email, password) => {
         try {
             const response = await loginService(email, password);
-            const { user, token } = response.data;
+            const { user, token } = response.data.data;
 
             setUser(user);
             setToken(token);
@@ -47,12 +64,12 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const register = async (userData) => {
+    const register = async (userData, isFormData = false) => {
         try {
-            console.log('📝 Attempting registration with data:', { ...userData, password: '[HIDDEN]' });
-            const response = await registerService(userData);
+            console.log('📝 Attempting registration...');
+            const response = await registerService(userData, isFormData);
             console.log('✅ Registration successful:', response.data);
-            const { user, token } = response.data;
+            const { user, token } = response.data.data;
 
             setUser(user);
             setToken(token);
@@ -66,13 +83,10 @@ export const AuthProvider = ({ children }) => {
             let errorMessage = 'Registration failed';
 
             if (error.response) {
-                // Server responded with an error
                 errorMessage = error.response.data?.message || `Server error: ${error.response.status}`;
             } else if (error.request) {
-                // Request was made but no response received
                 errorMessage = 'Cannot connect to server. Please ensure the backend is running on http://localhost:5000';
             } else {
-                // Error in setting up the request
                 errorMessage = error.message || 'An unexpected error occurred';
             }
 

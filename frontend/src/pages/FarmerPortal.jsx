@@ -39,14 +39,14 @@ const FarmerPortal = () => {
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link
-                                    to="/register"
+                                    to="/farmer-register"
                                     className="flex items-center justify-center gap-2 bg-yellow-400 text-gray-900 font-bold px-8 py-4 rounded-xl hover:bg-yellow-300 transition-all shadow-lg"
                                 >
                                     Create Farmer Account
                                     <ArrowRight className="h-5 w-5" />
                                 </Link>
                                 <Link
-                                    to="/login"
+                                    to="/farmer-login"
                                     className="flex items-center justify-center gap-2 bg-white/20 border-2 border-white/40 font-semibold px-8 py-4 rounded-xl hover:bg-white/30 transition-all backdrop-blur-sm"
                                 >
                                     Login to Your Account
@@ -99,7 +99,7 @@ const FarmerPortal = () => {
                             <h3 className="text-2xl font-bold mb-2">Ready to Start?</h3>
                             <p className="text-green-100 mb-6">Create your free farmer account in under 2 minutes</p>
                             <Link
-                                to="/register"
+                                to="/farmer-register"
                                 className="inline-flex items-center gap-2 bg-yellow-400 text-gray-900 font-bold px-8 py-3 rounded-xl hover:bg-yellow-300 transition-all"
                             >
                                 Get Started Free
@@ -107,7 +107,7 @@ const FarmerPortal = () => {
                             </Link>
                             <p className="mt-4 text-sm text-green-200">
                                 Already registered?{' '}
-                                <Link to="/login" className="text-yellow-300 hover:underline font-medium">
+                                <Link to="/farmer-login" className="text-yellow-300 hover:underline font-medium">
                                     Login here
                                 </Link>
                             </p>

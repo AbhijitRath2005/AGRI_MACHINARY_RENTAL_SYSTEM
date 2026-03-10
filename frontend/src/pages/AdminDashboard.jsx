@@ -89,8 +89,8 @@ const AdminDashboard = () => {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === tab.id
-                                ? 'border-primary-600 text-primary-600'
-                                : 'border-transparent text-gray-500 hover:text-gray-700'
+                            ? 'border-primary-600 text-primary-600'
+                            : 'border-transparent text-gray-500 hover:text-gray-700'
                             }`}
                     >
                         <tab.icon className="h-4 w-4" />
@@ -268,19 +268,38 @@ const AdminDashboard = () => {
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Name</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Email</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Phone</th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Vehicle No.</th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Purchase Date</th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Proof</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Joined</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
                                 {owners.length === 0 ? (
-                                    <tr><td colSpan="6" className="text-center py-10 text-gray-400">No registered owners yet</td></tr>
+                                    <tr><td colSpan="9" className="text-center py-10 text-gray-400">No registered owners yet</td></tr>
                                 ) : owners.map((o, i) => (
                                     <tr key={o._id} className="hover:bg-gray-50">
                                         <td className="px-4 py-3 text-sm text-gray-400">{i + 1}</td>
                                         <td className="px-4 py-3 font-medium text-gray-900">{o.name}</td>
                                         <td className="px-4 py-3 text-sm text-gray-600">{o.email}</td>
                                         <td className="px-4 py-3 text-sm text-gray-600">{o.phone || '—'}</td>
+                                        <td className="px-4 py-3 text-sm font-mono text-gray-800">{o.vehicleNumber || '—'}</td>
+                                        <td className="px-4 py-3 text-sm text-gray-600">
+                                            {o.vehiclePurchaseDate ? new Date(o.vehiclePurchaseDate).toLocaleDateString('en-IN') : '—'}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm">
+                                            {o.vehicleProofUrl ? (
+                                                <a
+                                                    href={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'}${o.vehicleProofUrl}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium"
+                                                >
+                                                    📄 View PDF
+                                                </a>
+                                            ) : '—'}
+                                        </td>
                                         <td className="px-4 py-3 text-sm text-gray-500">
                                             {new Date(o.createdAt).toLocaleDateString('en-IN')}
                                         </td>

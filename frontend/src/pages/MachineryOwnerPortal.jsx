@@ -39,14 +39,14 @@ const MachineryOwnerPortal = () => {
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link
-                                    to="/register"
+                                    to="/owner-register"
                                     className="flex items-center justify-center gap-2 bg-yellow-400 text-gray-900 font-bold px-8 py-4 rounded-xl hover:bg-yellow-300 transition-all shadow-lg"
                                 >
                                     Register as Owner
                                     <ArrowRight className="h-5 w-5" />
                                 </Link>
                                 <Link
-                                    to="/login"
+                                    to="/owner-login"
                                     className="flex items-center justify-center gap-2 bg-white/20 border-2 border-white/40 font-semibold px-8 py-4 rounded-xl hover:bg-white/30 transition-all backdrop-blur-sm"
                                 >
                                     Login to Dashboard
@@ -99,7 +99,7 @@ const MachineryOwnerPortal = () => {
                             <h3 className="text-2xl font-bold mb-2">Start Earning Today</h3>
                             <p className="text-blue-100 mb-6">Register your account and list your first machine in minutes</p>
                             <Link
-                                to="/register"
+                                to="/owner-register"
                                 className="inline-flex items-center gap-2 bg-yellow-400 text-gray-900 font-bold px-8 py-3 rounded-xl hover:bg-yellow-300 transition-all"
                             >
                                 List My Machine
@@ -107,7 +107,7 @@ const MachineryOwnerPortal = () => {
                             </Link>
                             <p className="mt-4 text-sm text-blue-200">
                                 Already registered?{' '}
-                                <Link to="/login" className="text-yellow-300 hover:underline font-medium">
+                                <Link to="/owner-login" className="text-yellow-300 hover:underline font-medium">
                                     Login here
                                 </Link>
                             </p>

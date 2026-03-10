@@ -12,8 +12,8 @@ dotenv.config();
 const users = [
     {
         name: 'Admin User',
-        email: 'admin@agrirental.com',
-        password: 'admin123',
+        email: 'abhijitsince2005@gmail.com',
+        password: 'Abhijit@2005',
         role: 'admin',
         phone: '9876543210',
         address: 'Mumbai, Maharashtra'

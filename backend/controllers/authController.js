@@ -4,7 +4,7 @@ import User from '../models/User.js';
 // Register new user
 export const register = async (req, res) => {
     try {
-        const { name, email, password, role, phone, address } = req.body;
+        const { name, email, password, role, phone, address, vehicleNumber, vehiclePurchaseDate } = req.body;
 
         // Check if user already exists
         const existingUser = await User.findOne({ email });
@@ -15,16 +15,27 @@ export const register = async (req, res) => {
             });
         }
 
-        // Create new user
-        const user = new User({
+        // Build user data
+        const userData = {
             name,
             email,
             password,
             role: role || 'farmer',
             phone,
             address
-        });
+        };
 
+        // Add owner-specific vehicle fields
+        if (role === 'owner') {
+            if (vehicleNumber) userData.vehicleNumber = vehicleNumber;
+            if (vehiclePurchaseDate) userData.vehiclePurchaseDate = vehiclePurchaseDate;
+            if (req.file) {
+                userData.vehicleProofUrl = '/uploads/vehicle-proofs/' + req.file.filename;
+            }
+        }
+
+        // Create new user
+        const user = new User(userData);
         await user.save();
 
         // Generate JWT token
