@@ -8,7 +8,7 @@ export default defineConfig({
         port: 5173,
         proxy: {
             '/api': {
-                target: 'https://agri-rental-backend.onrender.com',
+                target: 'https://agri-machinary-rental-system.onrender.com',
                 changeOrigin: true,
                 secure: true
             }
