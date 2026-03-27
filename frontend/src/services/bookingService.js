@@ -16,8 +16,8 @@ export const getBookingById = async (id) => {
     return await api.get(`/bookings/${id}`);
 };
 
-export const updateBookingStatus = async (id, status) => {
-    return await api.put(`/bookings/${id}/status`, { status });
+export const updateBookingStatus = async (id, statusData) => {
+    return await api.put(`/bookings/${id}/status`, statusData);
 };
 
 export const cancelBooking = async (id) => {

@@ -19,12 +19,19 @@ const paymentSchema = new mongoose.Schema({
     paymentMethod: {
         type: String,
         enum: ['card', 'cash', 'upi', 'bank_transfer'],
-        default: 'card'
+        default: 'upi'
     },
     transactionId: {
         type: String,
         unique: true,
         sparse: true
+    },
+    upiId: {
+        type: String,
+        default: '7205389498@nyes'
+    },
+    upiRef: {
+        type: String // Transaction reference provided by farmer
     },
     status: {
         type: String,

@@ -1,5 +1,12 @@
 import mongoose from 'mongoose';
 
+// Auto-generate a receipt number
+function generateReceiptNumber() {
+    const year = new Date().getFullYear();
+    const rand = Math.floor(10000 + Math.random() * 90000);
+    return `AGR-${year}-${rand}`;
+}
+
 const bookingSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -31,6 +38,25 @@ const bookingSchema = new mongoose.Schema({
         type: String,
         enum: ['pending', 'confirmed', 'completed', 'cancelled'],
         default: 'pending'
+    },
+    // UPI Payment tracking
+    paymentStatus: {
+        type: String,
+        enum: ['unpaid', 'pending_verification', 'paid'],
+        default: 'unpaid'
+    },
+    upiRef: {
+        type: String // UPI Transaction Reference entered by farmer
+    },
+    // Flipkart-style delivery/booking status timeline
+    deliveryStatus: {
+        type: String,
+        enum: ['booked', 'payment_received', 'confirmed', 'dispatched', 'active', 'completed', 'cancelled'],
+        default: 'booked'
+    },
+    receiptNumber: {
+        type: String,
+        default: generateReceiptNumber
     },
     notes: {
         type: String

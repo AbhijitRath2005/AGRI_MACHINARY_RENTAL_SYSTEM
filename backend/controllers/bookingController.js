@@ -109,7 +109,11 @@ export const getAllBookings = async (req, res) => {
 export const getUserBookings = async (req, res) => {
     try {
         const bookings = await Booking.find({ userId: req.user._id })
-            .populate('machineId', 'name type pricePerDay imageUrl')
+            .populate({
+                path: 'machineId',
+                select: 'name type pricePerDay imageUrl location ownerId',
+                populate: { path: 'ownerId', select: 'name email phone' }
+            })
             .sort({ createdAt: -1 });
 
         res.json({
@@ -151,10 +155,19 @@ export const getBookingById = async (req, res) => {
     }
 };
 
+// Delivery status map: what deliveryStatus to set when owner updates booking status
+const deliveryStatusMap = {
+    confirmed: 'confirmed',
+    dispatched: 'dispatched',
+    active: 'active',
+    completed: 'completed',
+    cancelled: 'cancelled'
+};
+
 // Update booking status
 export const updateBookingStatus = async (req, res) => {
     try {
-        const { status } = req.body;
+        const { status, deliveryStatus } = req.body;
 
         const booking = await Booking.findById(req.params.id);
 
@@ -166,11 +179,22 @@ export const updateBookingStatus = async (req, res) => {
         }
 
         booking.status = status;
+        // Also update deliveryStatus if provided, or infer from booking status
+        if (deliveryStatus) {
+            booking.deliveryStatus = deliveryStatus;
+        } else if (deliveryStatusMap[status]) {
+            booking.deliveryStatus = deliveryStatusMap[status];
+        }
+        // If payment is confirmed, mark it as paid
+        if (status === 'confirmed' && booking.paymentStatus === 'pending_verification') {
+            booking.paymentStatus = 'paid';
+        }
+
         await booking.save();
 
         // Update machine status based on booking status
         const machine = await Machine.findById(booking.machineId);
-        if (status === 'confirmed') {
+        if (status === 'confirmed' || status === 'active') {
             machine.status = 'rented';
         } else if (status === 'completed' || status === 'cancelled') {
             machine.status = 'available';
