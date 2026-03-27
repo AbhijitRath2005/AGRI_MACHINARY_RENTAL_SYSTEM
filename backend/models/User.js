@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true,
         trim: true,
-        match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
+        match: [/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/, 'Please enter a valid email address (e.g. you@gmail.com)']
     },
     password: {
         type: String,
@@ -28,11 +28,15 @@ const userSchema = new mongoose.Schema({
     },
     phone: {
         type: String,
-        trim: true
+        required: [true, 'Phone number is required'],
+        trim: true,
+        match: [/^[+]?[0-9]{7,15}$/, 'Please enter a valid phone number']
     },
     address: {
         type: String,
-        trim: true
+        required: [true, 'Address is required'],
+        trim: true,
+        minlength: [5, 'Address must be at least 5 characters']
     },
     isActive: {
         type: Boolean,

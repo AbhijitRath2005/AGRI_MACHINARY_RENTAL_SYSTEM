@@ -1,17 +1,26 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { sendWelcomeEmail } from '../utils/emailService.js';
 
 // Register new user
 export const register = async (req, res) => {
     try {
         const { name, email, password, role, phone, address, vehicleNumber, vehiclePurchaseDate } = req.body;
 
+        // Validate required fields before hitting DB
+        if (!phone || !phone.trim()) {
+            return res.status(400).json({ success: false, message: 'Phone number is required' });
+        }
+        if (!address || !address.trim()) {
+            return res.status(400).json({ success: false, message: 'Address is required' });
+        }
+
         // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
                 success: false,
-                message: 'User with this email already exists'
+                message: 'An account with this email already exists'
             });
         }
 
@@ -21,8 +30,8 @@ export const register = async (req, res) => {
             email,
             password,
             role: role || 'farmer',
-            phone,
-            address
+            phone: phone.trim(),
+            address: address.trim()
         };
 
         // Add owner-specific vehicle fields
@@ -45,15 +54,23 @@ export const register = async (req, res) => {
             { expiresIn: '7d' }
         );
 
+        // Send welcome email (non-blocking)
+        sendWelcomeEmail(email, name, role || 'farmer');
+
         res.status(201).json({
             success: true,
-            message: 'User registered successfully',
+            message: 'Account created successfully! Check your email for a welcome message.',
             data: {
                 user,
                 token
             }
         });
     } catch (error) {
+        // Handle Mongoose validation errors nicely
+        if (error.name === 'ValidationError') {
+            const message = Object.values(error.errors).map(e => e.message).join('. ');
+            return res.status(400).json({ success: false, message });
+        }
         res.status(500).json({
             success: false,
             message: error.message

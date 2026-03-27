@@ -17,9 +17,23 @@ const FarmerRegister = () => {
     const { register } = useAuth();
     const navigate = useNavigate();
 
+    const validateEmail = (email) => /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        if (!validateEmail(formData.email)) {
+            setError('Please enter a valid email address (e.g. yourname@gmail.com)');
+            return;
+        }
+        if (!formData.phone.trim()) {
+            setError('Phone number is required');
+            return;
+        }
+        if (!formData.address.trim()) {
+            setError('Address is required');
+            return;
+        }
         setLoading(true);
 
         const result = await register({ ...formData, role: 'farmer' });
@@ -64,10 +78,12 @@ const FarmerRegister = () => {
                                 <input
                                     type="email"
                                     required
+                                    pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                                    title="Enter a valid email like yourname@gmail.com"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     className="input"
-                                    placeholder="farmer@example.com"
+                                    placeholder="yourname@gmail.com"
                                 />
                             </div>
                             <div>
@@ -83,9 +99,12 @@ const FarmerRegister = () => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
                                 <input
                                     type="tel"
+                                    required
+                                    pattern="[+]?[0-9]{7,15}"
+                                    title="Enter a valid phone number (7-15 digits)"
                                     value={formData.phone}
                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                     className="input"
@@ -93,9 +112,11 @@ const FarmerRegister = () => {
                                 />
                             </div>
                             <div className="md:col-span-2">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Address *</label>
                                 <input
                                     type="text"
+                                    required
+                                    minLength={5}
                                     value={formData.address}
                                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                                     className="input"

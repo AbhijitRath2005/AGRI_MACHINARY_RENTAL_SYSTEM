@@ -20,6 +20,8 @@ const OwnerRegister = () => {
     const { register } = useAuth();
     const navigate = useNavigate();
 
+    const validateEmail = (email) => /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file && file.type !== 'application/pdf') {
@@ -37,6 +39,18 @@ const OwnerRegister = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        if (!validateEmail(formData.email)) {
+            setError('Please enter a valid email address (e.g. yourname@gmail.com)');
+            return;
+        }
+        if (!formData.phone.trim()) {
+            setError('Phone number is required');
+            return;
+        }
+        if (!formData.address.trim()) {
+            setError('Address is required');
+            return;
+        }
         setLoading(true);
 
         if (!formData.vehicleNumber) {
@@ -103,10 +117,12 @@ const OwnerRegister = () => {
                                 <input
                                     type="email"
                                     required
+                                    pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                                    title="Enter a valid email like yourname@gmail.com"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     className="input"
-                                    placeholder="owner@example.com"
+                                    placeholder="yourname@gmail.com"
                                 />
                             </div>
                             <div>
@@ -122,9 +138,12 @@ const OwnerRegister = () => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
                                 <input
                                     type="tel"
+                                    required
+                                    pattern="[+]?[0-9]{7,15}"
+                                    title="Enter a valid phone number (7-15 digits)"
                                     value={formData.phone}
                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                     className="input"
@@ -132,9 +151,11 @@ const OwnerRegister = () => {
                                 />
                             </div>
                             <div className="md:col-span-2">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Address *</label>
                                 <input
                                     type="text"
+                                    required
+                                    minLength={5}
                                     value={formData.address}
                                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                                     className="input"
